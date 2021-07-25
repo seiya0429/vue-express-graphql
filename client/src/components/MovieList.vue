@@ -12,7 +12,7 @@
         <b-tr v-for="movie in movies" :key="movie.id">
           <b-td>{{ movie.name }}</b-td>
           <b-td>{{ movie.genre }}</b-td>
-          <b-td>{{ movie.director }}</b-td>
+          <b-td>{{ movie.director.name }}</b-td>
         </b-tr>
       </b-tbody>
     </b-table-simple>
