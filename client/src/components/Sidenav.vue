@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-card title="映画監督" class="mt-4">
-      <b-form>
+      <b-form @submit.prevent="addDirector">
         <b-form-group
           label="監督名"
           label-for="input-director-name"
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { DIRECTOR_LIST, ADD_MOVIE } from "../graphql/queries";
+import { DIRECTOR_LIST, ADD_MOVIE, MOVIE_LIST, ADD_DIRECTOR } from "../graphql/queries";
 export default {
   name: "Sidenav",
   apollo: {
@@ -106,6 +106,26 @@ export default {
     }
   },
   methods: {
+    addDirector() {
+      const {name, age} = this.form.director
+      this.$apollo.mutate({
+        mutation: ADD_DIRECTOR,
+        variables: {
+          name,
+          age: parseInt(age)
+        },
+        update: (store, { data: {addDirector}}) => {
+          const data = store.readQuery({ query: DIRECTOR_LIST })
+
+          data.directors.push(addDirector)
+          store.writeQuery({ query: DIRECTOR_LIST, data })
+        }
+      }).then((data) => {
+        console.log(data);
+      }).catch((error) => {
+        console.log(error);
+      })
+    },
     addMovie() {
       const {name, genre, directorId} = this.form.movie
       this.$apollo.mutate({
@@ -114,6 +134,12 @@ export default {
           name,
           genre,
           directorId
+        },
+        update: (store, { data: {addMovie}}) => {
+          const data = store.readQuery({ query: MOVIE_LIST })
+
+          data.movies.push(addMovie)
+          store.writeQuery({ query: MOVIE_LIST, data })
         }
       }).then((data) => {
         console.log(data);
