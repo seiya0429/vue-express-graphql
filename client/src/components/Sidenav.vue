@@ -106,6 +106,10 @@ export default {
     }
   },
   methods: {
+    clearForm(target) {
+      const initData = this.$options.data()
+      Object.assign(this.$data.form[target], initData.form[target])
+    },
     addDirector() {
       const {name, age} = this.form.director
       this.$apollo.mutate({
@@ -122,6 +126,7 @@ export default {
         }
       }).then((data) => {
         console.log(data);
+        this.clearForm("director")
       }).catch((error) => {
         console.log(error);
       })
@@ -143,6 +148,7 @@ export default {
         }
       }).then((data) => {
         console.log(data);
+        this.clearForm("movie")
       }).catch((error) => {
         console.log(error);
       })
